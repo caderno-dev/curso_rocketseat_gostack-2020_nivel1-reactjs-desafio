@@ -14,10 +14,9 @@ function App() {
   }, []);
 
   async function handleAddRepository() {
+    const titleEl = document.getElementById('repository-title');
     const response = await api.post('repositories', {
-      title: `Repositório de Teste ${Date.now()}`,
-	    url: "www",
-	    techs: ['Node.js', 'Javascript']
+      title: titleEl.value
     });
 
     const repository = response.data;
@@ -26,23 +25,25 @@ function App() {
 
   async function handleRemoveRepository(id) {
     await api.delete(`repositories/${id}`);
-
     setRepositories(repositories.filter(repository => repository.id !== id));
   }
 
   return (
     <div>
       <ul data-testid='repository-list'>
-        {repositories.map(repository => 
-          <li key={repository.id}>
-            {repository.title}
-            <button onClick={() => handleRemoveRepository(repository.id)}>
-              Remover
-            </button>
-          </li>
-        )}
+        {
+          repositories.map(repository => 
+            <li key={repository.id}>
+              {repository.title}
+              <button onClick={() => handleRemoveRepository(repository.id)}>
+                Remover
+              </button>
+            </li>
+          )
+        }
       </ul>
 
+      <input type="text" id="repository-title" placeholder="Digite o título do repositório"></input>
       <button onClick={handleAddRepository}>Adicionar</button>
     </div>
   );
